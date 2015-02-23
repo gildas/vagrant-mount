@@ -28,6 +28,10 @@ module VagrantPlugins
           if argv.empty? || argv.length > 2
             raise Vagrant::Errors::CLIInvalidUsage, help: parser.help.chomp
           end
+
+          iso_path = argv[0]
+          @env.action_runner.run(:mount, { iso: iso_path })
+          0
         end
       end
     end
