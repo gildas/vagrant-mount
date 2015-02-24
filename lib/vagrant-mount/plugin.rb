@@ -18,13 +18,24 @@ module VagrantPlugins
         require_relative 'commands/mount'
         Command::Mount
       end
+
       # VirtualBox
-      require_relative 'actions/providers/virtualbox/mount'
-      require_relative 'actions/providers/virtualbox/driver'
+      begin
+        require_relative 'actions/providers/virtualbox/action'
+        require_relative 'actions/providers/virtualbox/driver'
+      rescue LoadError
+        # If plugin cannot be loaded, silently ignore
+        STDERR.puts "Vagrant plugin Virtualbox not available, ignoring code"
+      end
 
       # Hyper-V
-      require_relative 'actions/providers/hyperv/mount'
-      require_relative 'actions/providers/hyperv/driver'
+      begin
+        require_relative 'actions/providers/hyperv/mount'
+        require_relative 'actions/providers/hyperv/driver'
+      rescue LoadError
+        # If plugin cannot be loaded, silently ignore
+        STDERR.puts "Vagrant plugin Hyper-V not available, ignoring code"
+      end
 
       # VMWare Fusion
       begin
@@ -35,6 +46,7 @@ module VagrantPlugins
         require_relative 'actions/provider/vmware-fusion/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
+        STDERR.puts "Vagrant plugin VMWare Fusion not available, ignoring code"
       end
 
       # VMWare Workstation
@@ -46,6 +58,7 @@ module VagrantPlugins
         require_relative 'actions/provider/vmware-workstation/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
+        STDERR.puts "Vagrant plugin VMWare Workstation not available, ignoring code"
       end
 
       # Parallels Desktop
@@ -57,6 +70,7 @@ module VagrantPlugins
         require_relative 'actions/provider/parallels/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
+        STDERR.puts "Vagrant plugin Parallels Desktop  not available, ignoring code"
       end
 
     end

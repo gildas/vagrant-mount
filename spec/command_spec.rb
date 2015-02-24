@@ -1,6 +1,6 @@
 require 'rspec'
 require 'helpers/isolated_environment'
-require 'vagrant-mount/command_mount'
+require 'vagrant-mount/commands/mount'
 
 describe VagrantPlugins::Mount::Command::Mount do
   describe 'help' do
