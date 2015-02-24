@@ -29,8 +29,9 @@ module VagrantPlugins
             raise Vagrant::Errors::CLIInvalidUsage, help: parser.help.chomp
           end
 
-          iso_path = argv[0]
-          @env.action_runner.run(:mount, { iso: iso_path })
+          with_target_vms(argv) do |vm|
+            vm.action(:mount, argv)
+          end
           0
         end
       end
