@@ -26,4 +26,27 @@ class IsolatedEnvironment
     @logger.info("Removing Isolated Environment from #{@tempdir}")
     FileUtils.rm_rf(@tempdir)
   end
+
+  def file(name, contents, root=nil)
+    (root || @workdir).join(name).open('w+') { |f| f.write(contents) }
+  end
+
+  def vagrantfile(contents, root=nil)
+    file('Vagrantfile', contents, root)
+  end
+
+  def box(name, vagrantfile_contents='')
+    box_dir=boxes_dir.join(name)
+    box_dir.mkpath
+
+    box_dir.join('box.ovf').open('w') { |f| f.write('') }
+    vagrantfile(vagrantfile_contents, box_dir)
+    box_dir
+  end
+
+  def boxes_dir
+    dir=@homedir.join('boxes')
+    dir.mkpath
+    dir
+  end
 end
