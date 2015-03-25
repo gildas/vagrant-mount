@@ -30,6 +30,7 @@ module VagrantPlugins
           end
 
           with_target_vms(argv) do |vm|
+            next if vm.state.id == :not_created # We cannot mount if not created
             vm.action(:mount, argv)
           end
           0
