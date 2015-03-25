@@ -7,7 +7,7 @@ module VagrantPlugins
         end
 
         def call(env)
-          env[:ui].info(I18N.t('vagrant_mount.actions.mount.not_mounted', mount: env[:mount_point]))
+          env[:ui].info(I18N.t('vagrant_mount.actions.vm.mount.not_mounted', mount: env[:mount_point]))
           @app.call(env)
         end
       end
