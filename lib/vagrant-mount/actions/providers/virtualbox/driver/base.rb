@@ -3,9 +3,9 @@ module VagrantPlugins
     module Driver
       class Base
         def mount(mount_point)
-          info = get_vm_info(@uuid)
           # Find an IDE or SCSI controller
           begin
+            info = get_vm_info(@uuid)
             ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
             controller, device, port = find_controller_and_port(info, ide_types)
             execute('storageattach', @uuid, "--storagectl \"#{controller}\" --device #{device} --port #{port} --type dvddrive --medium \"#{mount_point}\"")
