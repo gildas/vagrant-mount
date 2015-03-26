@@ -25,7 +25,7 @@ module VagrantPlugins
         require_relative 'actions/providers/virtualbox/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        STDERR.puts "Vagrant plugin Virtualbox not available, ignoring code"
+        STDERR.puts "Vagrant plugin Virtualbox not available, ignoring code\n  Error: #{$!}"
       end
 
       # Hyper-V
@@ -34,7 +34,7 @@ module VagrantPlugins
         require_relative 'actions/providers/hyperv/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        STDERR.puts "Vagrant plugin Hyper-V not available, ignoring code"
+        STDERR.puts "Vagrant plugin Hyper-V not available, ignoring code\n  Error: #{$!}"
       end
 
       # VMWare Fusion
@@ -46,7 +46,7 @@ module VagrantPlugins
         require_relative 'actions/provider/vmware-fusion/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        STDERR.puts "Vagrant plugin VMWare Fusion not available, ignoring code"
+        STDERR.puts "Vagrant plugin VMWare Fusion not available, ignoring code\n  Error: #{$!}"
       end
 
       # VMWare Workstation
@@ -58,7 +58,7 @@ module VagrantPlugins
         require_relative 'actions/provider/vmware-workstation/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        STDERR.puts "Vagrant plugin VMWare Workstation not available, ignoring code"
+        STDERR.puts "Vagrant plugin VMWare Workstation not available, ignoring code\n  Error: #{$!}"
       end
 
       # Parallels Desktop
@@ -70,7 +70,7 @@ module VagrantPlugins
         require_relative 'actions/provider/parallels/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        STDERR.puts "Vagrant plugin Parallels Desktop  not available, ignoring code"
+        STDERR.puts "Vagrant plugin Parallels Desktop  not available, ignoring code\n  Error: #{$!}"
       end
 
     end
