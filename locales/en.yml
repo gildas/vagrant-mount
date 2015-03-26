@@ -1,0 +1,9 @@
+en:
+  vagrant_mount:
+    actions:
+      vm:
+        mount:
+          mounting: |-
+            Mounting ISO %{mount}...
+          not_mounted: |-
+            Failed to mount %{mount}
