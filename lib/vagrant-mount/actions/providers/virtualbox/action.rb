@@ -13,11 +13,12 @@ module VagrantPlugins
             builder.use Call, Created do |created_env, created_builder|
               if created_env[:result]
                 created_builder.use CheckAccessible
-                created_builder.use Call, Mount do |mount_env, mount_builder|
-                  unless mount_env[:result]
-                    mount_builder.use MessageNotMounted
-                  end
-                end
+                created_builder.use Mount
+                #created_builder.use Call, Mount do |mount_env, mount_builder|
+                #  unless mount_env[:result]
+                #    mount_builder.use MessageNotMounted
+                #  end
+                #end
               else
                 created_builder.use MessageNotCreated
               end
