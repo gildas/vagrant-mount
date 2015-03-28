@@ -5,25 +5,26 @@ module VagrantPlugins
         def mount(mount_point)
           # Find an IDE or SCSI controller
           begin
+            Mount.logger.info "Driver::mounting #{mount_point}"
             info = get_vm_info(@uuid)
             ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
             controller, device, port = find_controller_and_port(info, ide_types)
             execute('storageattach', @uuid, "--storagectl \"#{controller}\" --device #{device} --port #{port} --type dvddrive --medium \"#{mount_point}\"")
           rescue 
-            STDERR.puts "Nope... #{$!}"
+            Mount.logger.error "Nope... #{$!}"
           end
         end
 
         def find_controller_and_port(vm_info, controller_types)
           controller = info[:storagecontrollers].find {|storage| controller_types.include?(storage[:type]) }
           raise KeyError, 'No suitable Controller on this VM' unless controller
-STDERR.puts "Found a suitable Storage: #{controller[:name]}"
+          Mount.logger.info "Found a suitable Storage: #{controller[:name]}"
           device = controller[:controllers].find_index { |dev| dev[:ports].find(nil) }
           raise IndexError, 'No controller with free ports' unless device
-puts "  device id: #{device}"
+          Mount.logger.info "  device id: #{device}"
           port = controller[:controllers][device][:ports].find_index(nil)
           raise "No free port for controller #{controller_id}" unless port_id
-puts "  port id: #{port_id}"
+          Mount.logger.info "  port id: #{port_id}"
           return [controller[:name], device, port]
         end
 

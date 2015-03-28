@@ -10,10 +10,12 @@ module VagrantPlugins
         end
 
         def initialize(argv, env)
+          Mount.logger.info "Creating a new Mount command, #{argv.inspect}, #{env.inspect}"
           super
         end
 
         def execute
+          Mount.logger.info "Executing Mount command"
           options = {}
           parser  = OptionParser.new do |opts|
             opts.banner = 'Usage: vagrant mount [options] [vm-name]'
@@ -32,6 +34,7 @@ module VagrantPlugins
 
           raise Vagrant::Errors::CLIInvalidUsage, { help: parser.help.chomp } unless options[:mount]
           with_target_vms(argv) do |vm|
+            Mount.logger.info "Executing Mount command for vm: #{vm.inspect}"
             next if vm.state.id == :not_created # We cannot mount if not created
             vm.action(:mount, mount_point: options[:mount])
           end
