@@ -18,6 +18,11 @@ module VagrantPlugins
         Command::Mount
       end
 
+      command(:unmount) do
+        require_relative 'commands/unmount'
+        Command::Unmount
+      end
+
       # VirtualBox
       begin
         require_relative 'actions/providers/virtualbox/action'

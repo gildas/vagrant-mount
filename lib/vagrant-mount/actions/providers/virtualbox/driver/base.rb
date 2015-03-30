@@ -16,12 +16,41 @@ module VagrantPlugins
           ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
           controller_name, device_id, port_id = find_free_port(info, ide_types)
           execute('storageattach', @uuid,
-                  "--storagectl", controller_name,
-                  "--device", device_id.to_s,
-                  "--port", port_id.to_s,
-                  "--type", "dvddrive",
-                  "--medium", mount_point
+                  '--storagectl', controller_name,
+                  '--device', device_id.to_s,
+                  '--port', port_id.to_s,
+                  '--type', 'dvddrive',
+                  '--medium', mount_point
                  )
+        end
+
+        def unmount(mount_point, keep=false)
+          # Find an IDE or SCSI controller
+          @logger.debug "Mounting #{mount_point}"
+          info = get_vm_info(@uuid)
+          begin
+            controller_name, device_id, port_id = find_iso(info, mount_point)
+            @logger.debug "Mounted on #{controller_name}, device: #{device_id}, port: #{port_id}"
+            if keep
+              execute('storageattach', @uuid,
+                      '--storagectl', controller_name,
+                      '--device', device_id.to_s,
+                      '--port', port_id.to_s,
+                      '--type', 'dvddrive',
+                      '--medium', 'emptydrive'
+                    )
+            else
+              execute('storageattach', @uuid,
+                      '--storagectl', controller_name,
+                      '--device', device_id.to_s,
+                      '--port', port_id.to_s,
+                      '--medium', 'none'
+                    )
+            end
+          rescue KeyError
+            @logger.debug "Not mounted, we cannot proceed"
+            return 0
+          end
         end
 
         def find_iso(vm_info, mount_point)
