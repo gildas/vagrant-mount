@@ -27,9 +27,7 @@ module VagrantPlugins
 
           argv = parse_options(parser)
           return unless argv
-          if argv.empty? || argv.length > 2
-            raise Vagrant::Errors::CLIInvalidUsage, help: parser.help.chomp
-          end
+          argv << "default" if argv.empty?
 
           raise Vagrant::Errors::CLIInvalidUsage, { help: parser.help.chomp } unless options[:mount]
           with_target_vms(argv) do |vm|
