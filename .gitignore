@@ -12,3 +12,5 @@ tmp/
 *.o
 *.a
 mkmf.log
+.vagrant/
+log/
