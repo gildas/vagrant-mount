@@ -6,22 +6,51 @@ module VagrantPlugins
           # Find an IDE or SCSI controller
           @logger.debug "Mounting #{mount_point}"
           info = get_vm_info(@uuid)
+          begin
+            controller_name, device_id, port_id = find_iso(info, mount_point)
+            @logger.debug "Already mounted on #{controller_name}, device: #{device_id}, port: #{port_id}"
+            return 1
+          rescue KeyError
+            @logger.debug "Not mounted yet, we are good to go"
+          end
           ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
-          controller, device, port = find_controller_and_port(info, ide_types)
-          execute('storageattach', @uuid, "--storagectl", controller, "--device", device.to_s, "--port", port.to_s, "--type", "dvddrive", "--medium", mount_point)
+          controller_name, device_id, port_id = find_free_port(info, ide_types)
+          execute('storageattach', @uuid,
+                  "--storagectl", controller_name,
+                  "--device", device_id.to_s,
+                  "--port", port_id.to_s,
+                  "--type", "dvddrive",
+                  "--medium", mount_point
+                 )
         end
 
-        def find_controller_and_port(vm_info, controller_types)
-          controller = vm_info[:storagecontrollers].find {|storage| controller_types.include?(storage[:type]) }
+        def find_iso(vm_info, mount_point)
+          device_id = port_id = nil
+          controller = vm_info[:storagecontrollers].find do |ctrl|
+            device_id = ctrl[:devices].find_index do |device|
+              port_id = device[:ports].find_index do |port|
+                port[:mount].include? mount_point if port
+              end
+            end
+          end
+          raise KeyError unless controller
+          @logger.debug "Found ISO on Storage: #{controller[:name]}, device ##{device_id}, port ##{port_id}"
+          return [controller[:name], device_id, port_id]
+        end
+
+        def find_free_port(vm_info, controller_types)
+          device_id = port_id = nil
+          controller = vm_info[:storagecontrollers].find do |ctrl|
+            device_id = ctrl[:devices].find_index do |device|
+              port_id = device[:ports].find_index do |port|
+                port[:mount].include? mount_point if port
+                port.nil? || port[:mount] == 'emptydrive'
+              end
+            end
+          end
           raise KeyError, "No suitable Controller on VM #{@uuid}" unless controller
-          @logger.debug "Found a suitable Storage: #{controller[:name]}"
-          device = controller[:devices].find_index { |dev| dev[:ports].find(nil) }
-          raise IndexError, 'No device with free ports' unless device
-          @logger.debug "  device id: #{device}"
-          port = controller[:devices][device][:ports].find_index(nil)
-          raise "No free port for controller #{controller_id}" unless port
-          @logger.debug "  port id: #{port}"
-          return [controller[:name], device, port]
+          @logger.debug "Found a suitable Storage: #{controller[:name]}, device ##{device_id}, port ##{port_id}"
+          return [controller[:name], device_id, port_id]
         end
 
         def get_vm_info(name_or_uuid)
