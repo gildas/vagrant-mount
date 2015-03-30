@@ -4,32 +4,29 @@ module VagrantPlugins
       class Base
         def mount(mount_point)
           # Find an IDE or SCSI controller
-          begin
-            Mount.logger.info "Driver::mounting #{mount_point}"
-            info = get_vm_info(@uuid)
-            ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
-            controller, device, port = find_controller_and_port(info, ide_types)
-            execute('storageattach', @uuid, "--storagectl \"#{controller}\" --device #{device} --port #{port} --type dvddrive --medium \"#{mount_point}\"")
-          rescue 
-            Mount.logger.error "Nope... #{$!}"
-          end
+          @logger.debug "Mounting #{mount_point}"
+          info = get_vm_info(@uuid)
+          ide_types  = ['PIIX3', 'PIIX4', 'ICH6']
+          controller, device, port = find_controller_and_port(info, ide_types)
+          execute('storageattach', @uuid, "--storagectl", controller, "--device", device.to_s, "--port", port.to_s, "--type", "dvddrive", "--medium", mount_point)
         end
 
         def find_controller_and_port(vm_info, controller_types)
-          controller = info[:storagecontrollers].find {|storage| controller_types.include?(storage[:type]) }
-          raise KeyError, 'No suitable Controller on this VM' unless controller
-          Mount.logger.info "Found a suitable Storage: #{controller[:name]}"
-          device = controller[:controllers].find_index { |dev| dev[:ports].find(nil) }
-          raise IndexError, 'No controller with free ports' unless device
-          Mount.logger.info "  device id: #{device}"
-          port = controller[:controllers][device][:ports].find_index(nil)
-          raise "No free port for controller #{controller_id}" unless port_id
-          Mount.logger.info "  port id: #{port_id}"
+          controller = vm_info[:storagecontrollers].find {|storage| controller_types.include?(storage[:type]) }
+          raise KeyError, "No suitable Controller on VM #{@uuid}" unless controller
+          @logger.debug "Found a suitable Storage: #{controller[:name]}"
+          device = controller[:devices].find_index { |dev| dev[:ports].find(nil) }
+          raise IndexError, 'No device with free ports' unless device
+          @logger.debug "  device id: #{device}"
+          port = controller[:devices][device][:ports].find_index(nil)
+          raise "No free port for controller #{controller_id}" unless port
+          @logger.debug "  port id: #{port}"
           return [controller[:name], device, port]
         end
 
         def get_vm_info(name_or_uuid)
-          output = execute('showvminfo', name_or_uuid, '--machinereadable')
+          @logger.debug "Fetching info for VM #{name_or_uuid}"
+          output = execute('showvminfo', name_or_uuid, '--machinereadable', retryable: true)
           nic_index = nil
           output.split("\n").inject({storagecontrollers: [], nics: [], lpts: [], uarts: []}) do |hash, line|
             if line =~ /^"?([^="]+)"?="?(|[^"]+)"?$/

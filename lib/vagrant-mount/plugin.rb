@@ -13,10 +13,7 @@ module VagrantPlugins
       description <<-DESC
       This plugin mount ISO files inside Virtual Machines as DVD/CD
       DESC
-      STDERR.puts "creating command mount"  
       command(:mount) do
-        STDERR.puts "plugin: loading commands/mount"
-        Mount.logger.info "plugin: loading commands/mount"
         require_relative 'commands/mount'
         Command::Mount
       end
@@ -74,7 +71,6 @@ module VagrantPlugins
         # If plugin cannot be loaded, silently ignore
         STDERR.puts "Vagrant plugin Parallels Desktop  not available, ignoring code\n  Error: #{$!}"
       end
-
     end
   end
 end
