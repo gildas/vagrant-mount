@@ -15,13 +15,13 @@ module VagrantPlugins
         end
 
         def execute
-          options = { keep: false }
+          options = { remove_device: false }
           parser  = OptionParser.new do |opts|
             opts.banner = 'Usage: vagrant unmount [options] [vm-name]'
             opts.separator ''
             opts.separator '  Options:'
             opts.on("--iso path", "The path of the ISO to unmount") { |arg| options[:path] = arg }
-            opts.on("--keep", "Keep the controller/device/port after unmounting") { |arg| options[:keep] = true }
+            opts.on("--remove-device", "Remove the controller/device/port after unmounting") { |arg| options[:remove_device] = true }
           end
 
           argv = parse_options(parser)
@@ -30,7 +30,7 @@ module VagrantPlugins
 
           raise Vagrant::Errors::CLIInvalidUsage, { help: parser.help.chomp } unless options[:path]
           with_target_vms(argv) do |vm|
-            vm.action(:unmount, mount_point: options[:path], keep: options[:keep])
+            vm.action(:unmount, mount_point: options[:path], remove_device: options[:remove_device])
           end
           0
         end

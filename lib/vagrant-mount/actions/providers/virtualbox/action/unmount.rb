@@ -10,7 +10,7 @@ module VagrantPlugins
 
         def call(env)
           env[:ui].info(I18n.t('vagrant_mount.actions.vm.mount.unmounting', mount: env[:mount_point]))
-          env[:result] = env[:machine].provider.driver.unmount(env[:mount_point], env[:keep])
+          env[:result] = env[:machine].provider.driver.unmount(env[:mount_point], env[:remove_device])
           @app.call(env)
         end
       end
