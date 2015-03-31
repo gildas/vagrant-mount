@@ -106,11 +106,11 @@ module VagrantPlugins
                     key        = ($2 || 'mount').tr('- ', '__').to_sym
                     controller = hash[:storagecontrollers].find { |s| s[:name] == $1 }
                     raise KeyError, $1 unless controller
-                    device = controller[:devices][$3.to_i]
-                    raise IndexError, $3.to_i unless device
-                    raise IndexError, $4.to_i unless $4.to_i < 2
-                    device[:ports][$4.to_i] ||= {}
-                    device[:ports][$4.to_i][key] = value
+                    device = controller[:devices][$4.to_i]
+                    raise IndexError, $4.to_i unless device
+                    raise IndexError, $3.to_i unless $3.to_i < 2
+                    device[:ports][$3.to_i] ||= {}
+                    device[:ports][$3.to_i][key] = value
                   end
                 when /^natnet(\d+)$/
                   nic_index = $1.to_i - 1
