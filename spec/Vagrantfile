@@ -2,5 +2,19 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "box-cutter/centos70"
+  config.vm.define :centos, primary: true do |centos|
+    centos.vm.box = "box-cutter/centos70"
+  end
+
+  config.vm.define :ubuntu, autostart: false do |ubuntu|
+    ubuntu.vm.box = "box-cutter/ubuntu1404"
+  end
+
+  config.vm.define :windows, autostart: false do |windows|
+    windows.vm.box = "windows-2012R2-full-standard-eval"
+    windows.vm.box_check_update = false
+    windows.vm.guest = :windows
+
+    windows.vm.communicator = :winrm
+  end
 end
