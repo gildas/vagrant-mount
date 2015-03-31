@@ -72,7 +72,6 @@ module VagrantPlugins
           controller = vm_info[:storagecontrollers].find do |ctrl|
             device_id = ctrl[:devices].find_index do |device|
               port_id = device[:ports].find_index do |port|
-                port[:mount].include? mount_point if port
                 port.nil? || port[:mount] == 'emptydrive'
               end
             end
