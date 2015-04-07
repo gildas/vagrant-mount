@@ -5,5 +5,22 @@ en:
         mount:
           mounting: |-
             Mounting ISO %{mount}...
+          mounted: |-
+            Successfully mounted ISO %{mount}
+        unmount:
+          unmounting: |-
+            Unmounting ISO %{mount}...
+          unmounting_all: |-
+            Unmounting all ISOs...
+          unmounted: |-
+            Successfully unmounted ISO %{mount}
+          unmounted_all: |-
+            Successfully unmounted all ISOs
+    errors:
+      vm:
+        mount:
           not_mounted: |-
             Failed to mount %{mount}
+        unmount:
+          not_unmounted: |-
+            Failed to unmount %{mount}

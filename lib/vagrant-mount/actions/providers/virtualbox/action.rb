@@ -34,7 +34,7 @@ module VagrantPlugins
               created_builder.use CheckAccessible
               created_builder.use Call, Unmount do |unmount_env, unmount_builder|
                 unless unmount_env[:result]
-                  unmount_builder.use MessageNotMounted
+                  unmount_builder.use MessageNotUnmounted
                 end
               end
             else

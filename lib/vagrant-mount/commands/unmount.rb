@@ -28,7 +28,6 @@ module VagrantPlugins
           return unless argv
           argv << "default" if argv.empty?
 
-          raise Vagrant::Errors::CLIInvalidUsage, { help: parser.help.chomp } unless options[:path]
           with_target_vms(argv) do |vm|
             vm.action(:unmount, mount_point: options[:path], remove_device: options[:remove_device])
           end
