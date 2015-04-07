@@ -29,7 +29,11 @@ module VagrantPlugins
           @logger.debug "Mounting #{mount_point}"
           info = get_vm_info(@uuid)
           begin
-            controller_name, device_id, port_id = find_iso(info, mount_point)
+            if mount_point
+              controller_name, device_id, port_id = find_iso(info, mount_point)
+            else
+              controller_name, device_id, port_id = find_first_iso(info)
+            end
             @logger.debug "Mounted on #{controller_name}, device: #{device_id}, port: #{port_id}"
             if remove_device
               execute('storageattach', @uuid,
@@ -59,6 +63,20 @@ module VagrantPlugins
             device_id = ctrl[:devices].find_index do |device|
               port_id = device[:ports].find_index do |port|
                 port[:mount].include? mount_point if port
+              end
+            end
+          end
+          raise KeyError unless controller
+          @logger.debug "Found ISO on Storage: #{controller[:name]}, device ##{device_id}, port ##{port_id}"
+          return [controller[:name], device_id, port_id]
+        end
+
+        def find_first_iso(vm_info)
+          device_id = port_id = nil
+          controller = vm_info[:storagecontrollers].find do |ctrl|
+            device_id = ctrl[:devices].find_index do |device|
+              port_id = device[:ports].find_index do |port|
+                port[:mount] =~ /\.iso$/i if port
               end
             end
           end
