@@ -13,11 +13,13 @@ module VagrantPlugins
       description <<-DESC
       This plugin mount ISO files inside Virtual Machines as DVD/CD
       DESC
+      STDERR.puts "Loading command :mount"
       command(:mount) do
         require_relative 'commands/mount'
         Command::Mount
       end
 
+      STDERR.puts "Loading command :unmount"
       command(:unmount) do
         require_relative 'commands/unmount'
         Command::Unmount
