@@ -48,8 +48,8 @@ module VagrantPlugins
         require 'vagrant-vmware-fusion/action'
         require 'vagrant-vmware-fusion/driver'
 
-        require_relative 'actions/provider/vmware-fusion/mount'
-        require_relative 'actions/provider/vmware-fusion/driver'
+        require_relative 'actions/providers/vmware-fusion/action'
+        require_relative 'actions/providers/vmware-fusion/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
         STDERR.puts "Vagrant plugin VMWare Fusion not available, ignoring code\n  Error: #{$!}"
