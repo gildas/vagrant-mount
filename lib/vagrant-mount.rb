@@ -10,7 +10,7 @@ module VagrantPlugins
       @source_root ||= Pathname.new(File.expand_path('../../', __FILE__))
     end
 
-    Dir.glob('locales/*.yml').each do |lang|
+    Dir.glob(File.expand_path('locales/*.yml', Mount.source_root)).each do |lang|
       I18n.load_path << File.expand_path(lang)
     end
     I18n.reload!
