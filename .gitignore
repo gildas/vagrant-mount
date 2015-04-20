@@ -13,4 +13,5 @@ tmp/
 *.a
 mkmf.log
 .vagrant/
+.gems/
 log/
