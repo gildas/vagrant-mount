@@ -69,6 +69,5 @@ end
 
 group :plugins do
   gem 'vagrant-vmware-fusion', source: 'http://gems.hashicorp.com' if has_vmware_fusion?
-  #gem 'vagrant-mount', path: '.'
   gemspec
 end
