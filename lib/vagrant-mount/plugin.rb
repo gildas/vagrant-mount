@@ -60,8 +60,8 @@ module VagrantPlugins
         require 'vagrant-vmware-workstation/action'
         require 'vagrant-vmware-workstation/driver'
 
-        require_relative 'actions/provider/vmware-workstation/mount'
-        require_relative 'actions/provider/vmware-workstation/driver'
+        require_relative 'actions/providers/vmware-workstation/mount'
+        require_relative 'actions/providers/vmware-workstation/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
         STDERR.puts "Vagrant plugin VMWare Workstation not available, ignoring code\n  Error: #{$!}"
@@ -72,8 +72,8 @@ module VagrantPlugins
         require 'vagrant-parallels/action'
         require 'vagrant-parallels/driver'
 
-        require_relative 'actions/provider/parallels/mount'
-        require_relative 'actions/provider/parallels/driver'
+        require_relative 'actions/providers/parallels/mount'
+        require_relative 'actions/providers/parallels/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
         STDERR.puts "Vagrant plugin Parallels Desktop  not available, ignoring code\n  Error: #{$!}"
