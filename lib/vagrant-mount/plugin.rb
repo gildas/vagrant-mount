@@ -13,13 +13,13 @@ module VagrantPlugins
       description <<-DESC
       This plugin mount ISO files inside Virtual Machines as DVD/CD
       DESC
-      @logger.info "Loading command :mount"
+#      @logger.info "Loading command :mount"
       command(:mount) do
         require_relative 'commands/mount'
         Command::Mount
       end
 
-      @logger.info "Loading command :unmount"
+#      @logger.info "Loading command :unmount"
       command(:unmount) do
         require_relative 'commands/unmount'
         Command::Unmount
@@ -31,7 +31,6 @@ module VagrantPlugins
         require_relative 'actions/providers/virtualbox/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        @logger.error "Vagrant plugin Virtualbox not available, ignoring code\n  Error: #{$!}"
       end
 
       # Hyper-V
@@ -40,7 +39,6 @@ module VagrantPlugins
         require_relative 'actions/providers/hyperv/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        @logger.error "Vagrant plugin Hyper-V not available, ignoring code\n  Error: #{$!}"
       end
 
       # VMWare Fusion
@@ -52,7 +50,6 @@ module VagrantPlugins
         require_relative 'actions/providers/vmware-fusion/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        @logger.error "Vagrant plugin VMWare Fusion not available, ignoring code\n  Error: #{$!}"
       end
 
       # VMWare Workstation
@@ -64,7 +61,6 @@ module VagrantPlugins
         require_relative 'actions/providers/vmware-workstation/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        @logger.error "Vagrant plugin VMWare Workstation not available, ignoring code\n  Error: #{$!}"
       end
 
       # Parallels Desktop
@@ -76,7 +72,6 @@ module VagrantPlugins
         require_relative 'actions/providers/parallels/driver'
       rescue LoadError
         # If plugin cannot be loaded, silently ignore
-        @logger.error "Vagrant plugin Parallels Desktop  not available, ignoring code\n  Error: #{$!}"
       end
     end
   end
