@@ -61,8 +61,7 @@ group :development do
         )
       end
     rescue Gem::LoadError
-      STDERR.puts "Cannot load Vagrant VMWare plugin"
-      exit 1
+      STDERR.puts "Cannot load Vagrant VMWare plugin. #{$!}"
     end
   end
 end
