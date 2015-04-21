@@ -15,6 +15,10 @@ def has_vmware_fusion?
   return ! which('vmrun', '/Applications/VMware Fusion.app/Contents/Library').nil?
 end
 
+def has_parallels?
+  return ! which('prlctl').nil?
+end
+
 vagrant_locations = %w{ /Applications/Vagrant/embedded /opt/vagrant/embedded C:/HashiCorp/Vagrant/embedded }
 vagrant_location  = vagrant_locations.find {|location| File.directory? location }
 
@@ -27,6 +31,14 @@ else
 end
 
 puts "We can use VMWare Fusion" if has_vmware_fusion? && $DEBUG
+puts "We can use Parallels"     if has_parallels? && $DEBUG
+
+group :plugins do
+  gem 'rgloader'                                                   if has_vmware_fusion?
+  gem 'vagrant-vmware-fusion', source: 'http://gems.hashicorp.com' if has_vmware_fusion?
+  gem 'vagrant-parallels'                                          if has_parallels?
+  gemspec
+end
 
 group :development do
   gem 'winrm', '~> 1.1.3'
@@ -37,9 +49,6 @@ group :development do
     require 'fileutils'
 
     begin
-      STDERR.puts "Loading gem vagrant-vmware-fusion" if $DEBUG
-      gem 'rgloader'
-      gem 'vagrant-vmware-fusion', source: 'http://gems.hashicorp.com'
       STDERR.puts "Finding where gem vagrant-vmware-fusion is installed" if $DEBUG
       fusion_location = Gem::Specification.find_by_name('vagrant-vmware-fusion').gem_dir
       puts "VMWare fusion gem is in #{fusion_location}" if $DEBUG
@@ -64,9 +73,4 @@ group :development do
       STDERR.puts "Cannot load Vagrant VMWare plugin. #{$!}"
     end
   end
-end
-
-group :plugins do
-  gem 'vagrant-vmware-fusion', source: 'http://gems.hashicorp.com' if has_vmware_fusion?
-  gemspec
 end
