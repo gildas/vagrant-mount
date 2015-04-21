@@ -38,12 +38,12 @@ group :development do
 
     begin
       STDERR.puts "Loading gem vagrant-vmware-fusion" if $DEBUG
+      gem 'rgloader'
       gem 'vagrant-vmware-fusion', source: 'http://gems.hashicorp.com'
       STDERR.puts "Finding where gem vagrant-vmware-fusion is installed" if $DEBUG
       fusion_location = Gem::Specification.find_by_name('vagrant-vmware-fusion').gem_dir
       puts "VMWare fusion gem is in #{fusion_location}" if $DEBUG
 
-      gem 'rgloader'
       unless Dir.exists? File.join(fusion_location, 'rgloader')
         STDERR.puts "Linking local 'rgloader' file to embedded installer" if $DEBUG
         FileUtils.ln_s(
